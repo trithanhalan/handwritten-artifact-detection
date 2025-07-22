@@ -70,6 +70,7 @@ def preprocess_image_array(image_array):
 def enhance_image_quality(image):
     """
     Apply image enhancement techniques to improve quality
+    Streamlit Cloud compatible - uses headless OpenCV operations only
     
     Args:
         image (PIL.Image): Input image
@@ -77,26 +78,35 @@ def enhance_image_quality(image):
     Returns:
         PIL.Image: Enhanced image
     """
-    # Convert to numpy array for OpenCV operations
-    img_array = np.array(image)
-    
-    if len(img_array.shape) == 3:
-        # Convert to grayscale for enhancement
-        gray = cv2.cvtColor(img_array, cv2.COLOR_RGB2GRAY)
-    else:
-        gray = img_array
-    
-    # Apply Gaussian blur to reduce noise
-    blurred = cv2.GaussianBlur(gray, (3, 3), 0)
-    
-    # Apply adaptive histogram equalization to improve contrast
-    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
-    enhanced = clahe.apply(blurred)
-    
-    # Convert back to PIL Image
-    enhanced_image = Image.fromarray(enhanced)
-    
-    return enhanced_image
+    try:
+        # Convert to numpy array for OpenCV operations
+        img_array = np.array(image)
+        
+        if len(img_array.shape) == 3:
+            # Convert to grayscale for enhancement
+            gray = cv2.cvtColor(img_array, cv2.COLOR_RGB2GRAY)
+        else:
+            gray = img_array
+        
+        # Apply Gaussian blur to reduce noise (headless operation)
+        blurred = cv2.GaussianBlur(gray, (3, 3), 0)
+        
+        # Apply adaptive histogram equalization to improve contrast
+        clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+        enhanced = clahe.apply(blurred)
+        
+        # Convert back to PIL Image
+        enhanced_image = Image.fromarray(enhanced)
+        
+        return enhanced_image
+        
+    except Exception as e:
+        # Fallback to PIL-only enhancement if OpenCV fails
+        print(f"OpenCV enhancement failed, using PIL fallback: {e}")
+        # Simple PIL-based enhancement
+        if image.mode != 'L':
+            image = image.convert('L')  # Convert to grayscale
+        return image
 
 def batch_preprocess_images(image_list, use_augmentation=False):
     """
