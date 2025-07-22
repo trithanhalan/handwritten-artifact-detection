@@ -1,0 +1,13 @@
+
+Collecting usage statistics. To deactivate, set browser.gatherUsageStats to false.
+
+
+  You can now view your Streamlit app in your browser.
+
+  URL: http://0.0.0.0:8501
+
+Model loaded successfully from saved_model/artifact_cnn.pth
+Model: ArtifactCNN
+Total parameters: 161,098
+Trainable parameters: 161,098
+Input size: (1, 1, 28, 28)
