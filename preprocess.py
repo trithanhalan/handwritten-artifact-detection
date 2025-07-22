@@ -1,8 +1,14 @@
+"""
+Image preprocessing module for Handwritten Artifact Detection
+Streamlit Cloud compatible - uses opencv-python-headless with no GUI dependencies
+All OpenCV operations are headless (no cv2.imshow, cv2.waitKey, etc.)
+"""
+
 import torch
 import torchvision.transforms as transforms
 from PIL import Image
 import numpy as np
-import cv2
+import cv2  # opencv-python-headless for cloud deployment
 
 # Define image transformation pipeline
 transform = transforms.Compose([
