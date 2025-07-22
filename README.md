@@ -1,0 +1,1 @@
+# handwritten-artifact-detection
